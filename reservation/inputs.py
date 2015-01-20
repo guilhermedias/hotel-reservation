@@ -26,24 +26,24 @@ class TextFileReader(InputReader):
   """ Parse and process input from text files. """
 
   def __init__(self):
-    self.source_index = -1 # Read position
-    self.input_source = []
+    self._source_index = -1 # Read position
+    self._input_source = []
 
   def set_input_source(self, input_source):
     with open(input_source, 'r') as s:
-      self.source_index = -1
-      self.input_source = s.readlines()
+      self._source_index = -1
+      self._input_source = s.readlines()
 
   def get_next(self):
     while True:
-      self.source_index += 1
-      if(self.source_index >= len(self.input_source)):
+      self._source_index += 1
+      if(self._source_index >= len(self._input_source)):
         # End of input source, return None
         return None
       else:
         try:
           # Instatiate CustomerRequest
-          line = self.input_source[self.source_index]
+          line = self._input_source[self._source_index]
           line = ''.join(line.split())
           split_line = line.split(':')
           customer_type = split_line[0]
