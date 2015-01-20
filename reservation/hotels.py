@@ -1,36 +1,33 @@
+
 class Hotel:
-  """A single hotel representation"""
+  """ A single hotel representation. """
+
   def __init__(self, name,
                       weekday_regular, weekday_rewards,
                       weekend_regular, weekend_rewards, rating):
     self.name = name
-    self.weekday_regular = int(weekday_regular)
-    self.weekday_rewards = int(weekday_rewards)
-    self.weekend_regular = int(weekend_regular)
-    self.weekend_rewards = int(weekend_rewards)
-    self.rating = int(rating)
+    self.weekday_regular = float(weekday_regular)
+    self.weekday_rewards = float(weekday_rewards)
+    self.weekend_regular = float(weekend_regular)
+    self.weekend_rewards = float(weekend_rewards)
+    self.rating = float(rating)
 
 
-  def request_costs(self, customer_request):
-    total = 0
+  def request_cost(self, customer_request):
+    total_cost = 0
     if(customer_request.is_rewards()):
-      for date in customer_request.dates:
-        if(is_weekday(date)):
-          total += self.weekday_rewards
-        else:
-          total += self.weekend_rewards
+      total_cost = customer_request.get_weekday_count() * self.weekday_rewards + \
+                   customer_request.get_weekend_count() * self.weekend_rewards
     else:
-      for date in customer_request.dates:
-        if(is_weekday(date)):
-          total += self.weekday_regular
-        else:
-          total += self.weekend_regular
+      total_cost = customer_request.get_weekday_count() * self.weekday_regular + \
+                   customer_request.get_weekend_count() * self.weekend_regular
 
-    return total
+    return total_cost
 
 
 class HotelChain:
-  """Hotel chain representation"""
+  """ Hotel chain representation. """
+
   def __init__(self):
     self.hotels = []
 
@@ -51,7 +48,7 @@ class HotelChain:
     cheapest_hotel = None
     lowest_cost = -1
     for hotel in self.hotels:
-      current_cost = hotel.request_costs(customer_request)
+      current_cost = hotel.request_cost(customer_request)
       if(current_cost < lowest_cost or lowest_cost == -1):
         lowest_cost = current_cost
         cheapest_hotel = hotel
@@ -63,9 +60,3 @@ class HotelChain:
 
     return cheapest_hotel.name
 
-def is_weekday(date):
-  day = date[date.find('(')+1:date.find(')')]
-  if(day == "sat" or day == "sun"):
-    return False
-  else:
-    return True
