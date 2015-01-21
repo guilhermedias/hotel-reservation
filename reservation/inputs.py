@@ -27,7 +27,7 @@ class InputReader(object):
     """ Checks the integrity of an input line. """
     # Input line pattern
     pattern = re.compile(
-          "(\w+):(\s*\w+\(\w+\)\s*,)*(\s*\w+\(\w+\)\s*,?\s*\Z)")
+          "\s*(\w+):(\s*\w+\(\w+\)\s*,)*(\s*\w+\(\w+\)\s*,?\s*\Z)")
 
     if(pattern.match(input_line)):
       return True
