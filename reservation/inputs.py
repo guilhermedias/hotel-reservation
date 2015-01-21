@@ -54,11 +54,13 @@ class TextFileReader(InputReader):
     # Iterate over the input source until it finds
     # valid input line or the input source is over
     while not valid_input and self._source_index < len(self._input_source):
-      input_line = self._input_source[self._source_index]
+      input_line = self._input_source[self._source_index].rstrip()
       if(TextFileReader.valid_input(input_line)):
         customer_type = input_line.split(':')[0]
         booking_dates = re.findall("\w+\(\w+\)", input_line)
-        next_request = customer.CustomerRequest(customer_type, booking_dates)
+
+        next_request = customer.CustomerRequest(customer_type,
+                                                booking_dates, input_line)
         valid_input = True
 
       self._source_index += 1
