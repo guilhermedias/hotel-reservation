@@ -42,7 +42,7 @@ class HotelChain:
 
       self.hotels.append(Hotel(name, rating, price_table))
 
-  def find_cheapest(self, customer_request):
+  def find_cheapest_hotel(self, customer_request):
     cheapest_hotel = None
     lowest_cost = -1
     for hotel in self.hotels:

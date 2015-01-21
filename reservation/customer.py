@@ -25,12 +25,6 @@ class CustomerRequest(object):
   def get_weekend_count(self):
     return self._weekend_count
 
-  def is_rewards(self):
-    if(self.customer_type == "Rewards"):
-      return True
-    else:
-      return False
-
 
   # Protected methods
 
@@ -43,5 +37,4 @@ class CustomerRequest(object):
         self._weekend_count += 1
       else:
         self._weekday_count += 1
-
 
