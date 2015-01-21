@@ -21,7 +21,10 @@ class HotelChain(object):
   """ Hotel chain representation. """
 
   def __init__(self):
-    self.hotels = []
+    self._hotels = []
+
+  def add_hotel(self, hotel):
+    self._hotels.append(hotel)
 
   def load_hotels(self, config_file):
     """ Load hotels information from configuration XML file. """
@@ -43,14 +46,14 @@ class HotelChain(object):
 
         price_table[customer_type][booking_class] = float(price.text)
 
-      self.hotels.append(Hotel(name, rating, price_table))
+      self._hotels.append(Hotel(name, rating, price_table))
 
   def find_cheapest_hotel(self, customer_request):
-
     """ Find the most affordable choice in the hotel chain. """
+
     cheapest_hotel = None
 
-    for hotel in self.hotels:
+    for hotel in self._hotels:
       cheapest_hotel = HotelChain.compare_hotels(cheapest_hotel, hotel, customer_request)
 
     return cheapest_hotel.name
