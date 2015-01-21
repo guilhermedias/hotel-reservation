@@ -1,6 +1,6 @@
 from xml.etree import ElementTree
 
-class Hotel:
+class Hotel(object):
   """ A single hotel representation. """
 
   def __init__(self, name, rating, price_table):
@@ -16,7 +16,7 @@ class Hotel:
            customer_request.get_weekend_count() * weekend_price
 
 
-class HotelChain:
+class HotelChain(object):
   """ Hotel chain representation. """
 
   def __init__(self):
