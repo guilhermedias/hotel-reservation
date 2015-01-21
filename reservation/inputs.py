@@ -1,4 +1,5 @@
 
+import re
 from abc import ABCMeta
 from abc import abstractmethod
 from reservation import customer
@@ -21,36 +22,46 @@ class InputReader(object):
     """
     pass
 
+  @classmethod
+  def valid_input(cls, input_line):
+    """ Checks the integrity of an input line. """
+    # Input line pattern
+    pattern = re.compile(
+          "(\w+):(\s*\w+\(\w+\)\s*,)*(\s*\w+\(\w+\)\s*,?\s*\Z)")
+
+    if(pattern.match(input_line)):
+      return True
+    else:
+      return False
+
 
 class TextFileReader(InputReader):
   """ Parse and process input from text files. """
 
   def __init__(self):
-    self._source_index = -1 # Read position
+    self._source_index = 0 # Read position
     self._input_source = []
 
   def set_input_source(self, input_source):
     with open(input_source, 'r') as s:
-      self._source_index = -1
+      self._source_index = 0
       self._input_source = s.readlines()
 
   def get_next(self):
-    while True:
-      self._source_index += 1
-      if(self._source_index >= len(self._input_source)):
-        # End of input source, return None
-        return None
-      else:
-        try:
-          # Instatiate CustomerRequest
-          line = self._input_source[self._source_index]
-          line = ''.join(line.split())
-          split_line = line.split(':')
-          customer_type = split_line[0]
-          dates = split_line[1].split(',')
-          return customer.CustomerRequest(customer_type, dates)
+    next_request = None
+    valid_input = False
 
-        except:
-          # Malformed input line -> skip to the next iteration
-          pass
+    # Iterate over the input source until it finds
+    # valid input line or the input source is over
+    while not valid_input and self._source_index < len(self._input_source):
+      input_line = self._input_source[self._source_index]
+      if(TextFileReader.valid_input(input_line)):
+        customer_type = input_line.split(':')[0]
+        booking_dates = re.findall("\w+\(\w+\)", input_line)
+        next_request = customer.CustomerRequest(customer_type, booking_dates)
+        valid_input = True
+
+      self._source_index += 1
+
+    return next_request
 

@@ -24,6 +24,8 @@ class HotelChain(object):
     self.hotels = []
 
   def load_hotels(self, config_file):
+    """ Load hotels information from configuration XML file. """
+
     configs = ElementTree.parse(config_file)
 
     for hotel in configs.getroot().findall("hotel"):
@@ -44,18 +46,36 @@ class HotelChain(object):
       self.hotels.append(Hotel(name, rating, price_table))
 
   def find_cheapest_hotel(self, customer_request):
-    cheapest_hotel = None
-    lowest_cost = -1
-    for hotel in self.hotels:
-      current_cost = hotel.request_cost(customer_request)
-      if(current_cost < lowest_cost or lowest_cost == -1):
-        lowest_cost = current_cost
-        cheapest_hotel = hotel
 
-      if(current_cost == lowest_cost):
-        if(hotel.rating > cheapest_hotel.rating):
-          lowest_cost = current_cost
-          cheapest_hotel = hotel
+    """ Find the most affordable choice in the hotel chain. """
+    cheapest_hotel = None
+
+    for hotel in self.hotels:
+      cheapest_hotel = HotelChain.compare_hotels(cheapest_hotel, hotel, customer_request)
 
     return cheapest_hotel.name
+
+  @classmethod
+  def compare_hotels(cls, hotel_a, hotel_b, customer_request):
+    if hotel_a == None:
+      return hotel_b
+
+    if hotel_b == None:
+      return hotel_a
+
+    cost_a = hotel_a.request_cost(customer_request)
+    cost_b = hotel_b.request_cost(customer_request)
+
+    selected_hotel = None
+
+    if cost_a < cost_b:
+      selected_hotel = hotel_a
+    elif cost_b < cost_a:
+      selected_hotel = hotel_b
+    elif hotel_a.rating > hotel_b.rating:
+      selected_hotel = hotel_a
+    else:
+      selected_hotel = hotel_b
+
+    return selected_hotel
 
