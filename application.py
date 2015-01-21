@@ -3,7 +3,7 @@ from reservation import inputs
 from reservation import hotels
 
 hotel_chain = hotels.HotelChain()
-hotel_chain.load_hotels('hotels.csv')
+hotel_chain.load_hotels('config.xml')
 
 input_reader = inputs.TextFileReader()
 input_reader.set_input_source('inputs.txt')

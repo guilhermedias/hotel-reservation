@@ -1,28 +1,19 @@
+from xml.etree import ElementTree
 
 class Hotel:
   """ A single hotel representation. """
 
-  def __init__(self, name,
-                      weekday_regular, weekday_rewards,
-                      weekend_regular, weekend_rewards, rating):
+  def __init__(self, name, rating, price_table):
     self.name = name
-    self.weekday_regular = float(weekday_regular)
-    self.weekday_rewards = float(weekday_rewards)
-    self.weekend_regular = float(weekend_regular)
-    self.weekend_rewards = float(weekend_rewards)
-    self.rating = float(rating)
-
+    self.rating = rating
+    self._price_table = price_table
 
   def request_cost(self, customer_request):
-    total_cost = 0
-    if(customer_request.is_rewards()):
-      total_cost = customer_request.get_weekday_count() * self.weekday_rewards + \
-                   customer_request.get_weekend_count() * self.weekend_rewards
-    else:
-      total_cost = customer_request.get_weekday_count() * self.weekday_regular + \
-                   customer_request.get_weekend_count() * self.weekend_regular
+    weekday_price = self._price_table[customer_request.customer_type]["weekday"]
+    weekend_price = self._price_table[customer_request.customer_type]["weekend"]
 
-    return total_cost
+    return customer_request.get_weekday_count() * weekday_price + \
+           customer_request.get_weekend_count() * weekend_price
 
 
 class HotelChain:
@@ -31,18 +22,25 @@ class HotelChain:
   def __init__(self):
     self.hotels = []
 
-  def load_hotels(self, hotels_file):
-    """Load hotels information from the given CSV file"""
-    # Parses the CSV file and creates the Hotel objects
-    with open(hotels_file, 'r') as h_file:
-      for line in h_file:
-        h_values = line.split(',')
-        hotel = Hotel(h_values[0], # Hotel name
-                      h_values[1], h_values[2], # Weekday rates for regular and rewards customers
-                      h_values[3], h_values[4], # Weekend rates for regular and rewards customers
-                      h_values[5]) # Hotel rating
+  def load_hotels(self, config_file):
+    configs = ElementTree.parse(config_file)
 
-        self.hotels.append(hotel)
+    for hotel in configs.getroot().findall("hotel"):
+      name =  hotel.attrib["name"]
+      rating =  hotel.attrib["rating"]
+
+      price_table = dict()
+
+      for price in hotel.findall("price"):
+        customer_type = price.attrib["customer_type"]
+        booking_class = price.attrib["booking_class"]
+
+        if customer_type not in price_table:
+          price_table[customer_type] = dict()
+
+        price_table[customer_type][booking_class] = float(price.text)
+
+      self.hotels.append(Hotel(name, rating, price_table))
 
   def find_cheapest(self, customer_request):
     cheapest_hotel = None

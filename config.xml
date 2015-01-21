@@ -1,0 +1,25 @@
+<xml>
+  <hotel name="Lakewood" rating="3">
+    <price booking_class="weekday" customer_type="Regular">110</price>
+    <price booking_class="weekend" customer_type="Regular">90</price>
+
+    <price booking_class="weekday" customer_type="Rewards">80</price>
+    <price booking_class="weekend" customer_type="Rewards">80</price>
+  </hotel>
+
+  <hotel name="Bridgewood" rating="4">
+    <price booking_class="weekday" customer_type="Regular">160</price>
+    <price booking_class="weekend" customer_type="Regular">60</price>
+
+    <price booking_class="weekday" customer_type="Rewards">110</price>
+    <price booking_class="weekend" customer_type="Rewards">50</price>
+  </hotel>
+
+  <hotel name="Ridgewood" rating="5">
+    <price booking_class="weekday" customer_type="Regular">220</price>
+    <price booking_class="weekend" customer_type="Regular">150</price>
+
+    <price booking_class="weekday" customer_type="Rewards">100</price>
+    <price booking_class="weekend" customer_type="Rewards">40</price>
+  </hotel>
+</xml>
