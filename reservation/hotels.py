@@ -1,3 +1,4 @@
+
 from xml.etree import ElementTree
 
 class Hotel(object):
